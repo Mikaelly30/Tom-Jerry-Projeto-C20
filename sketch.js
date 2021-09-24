@@ -1,49 +1,51 @@
-var fundo;
-var gato, gatoImg1, gatoImg2, gatoImg3;
-var rato, ratoImg1, ratoImg2, ratoImg3;
+var bgImg, gato, rato;
 function preload() {
     //load the images here
-    fundo = loadImage("garden.png");
-
+    bgImg = loadImage("garden.png");
     gatoImg1 = loadAnimation("cat1.png");
-    gatoImg2 = loadAnimation("cat2.png","cat3.png");
-    gatoImg3 = loadAnimation("cat4.png");
-
     ratoImg1 = loadAnimation("mouse1.png");
-    ratoImg2 = loadAnimation("mouse2.png","mouse3.png");
+    gatoImg2 = loadAnimation("cat2.png", "cat3.png");
+    ratoImg2 = loadAnimation("mouse2.png", "mouse3.png");
+    gatoImg3 = loadAnimation("cat4.png");
     ratoImg3 = loadAnimation("mouse4.png");
 }
 
 function setup(){
     createCanvas(1000,800);
-    //create cat and mouse sprites here
-    gato = createSprite(870,600);
-    gato.addAnimation("catSitting",gatoImg1);
+    //create tom and jerry sprites here
+    gato = createSprite(800, 600);
+    gato.addAnimation("gatoSentado", gatoImg1);
+    gato.addAnimation("gatoAndando", gatoImg2);
+    gato.addAnimation("gatoEmPe", gatoImg3);
     gato.scale = 0.2;
-    
-    rato = createSprite(200,600);
-    rato.addAnimation("mouseStanding",ratoImg1);
-    rato.scale  = 0.15;
+    gato.setCollider("rectangle",0,0,gato.width/2,gato.height/2);
+    gato.debug = false;
+
+    rato = createSprite(150, 600);
+    rato.addAnimation("ratoComQueijo", ratoImg1);
+    rato.addAnimation("ratoAnimado", ratoImg2);
+    rato.addAnimation("ratoComLupa", ratoImg3);
+    rato.scale = 0.1;
+    rato.setCollider("rectangle",0,0,rato.width/2,rato.height/2);
+    rato.debug = false;
+
 }
 
 function draw() {
-
-    background(bg);
-    //Write condition here to evalute if cat and mouse 
-    if(gato.x - rato.x < (gato.width - rato.width)/2)
-    { 
-        gato.velocityX = 0;
-        gato.addAnimation("ultimaImagemdoGato", gatoImg3);
-        gato.x =300;
-        gato.changeAnimation("ultimaImagemdoGato");
-
-        rato.addAnimation("ultimaImagemdoRato", ratoImg3);
-        rato.changeAnimation("ultimaImagemdoRato");
-    }  
-
     keyPressed();
 
+    background(bgImg);
+    //Write condition here to evalute if tom and jerry collide
+    if(gato.x - rato.x < (gato.width - rato.width)/2){
+        rato.changeAnimation("ratoComLupa",ratoImg3);
+        gato.changeAnimation("gatoEmPe",gatoImg3);
+        gato.velocity = 0;
+    }
+ 
+    
+
     drawSprites();
+   
 }
 
 
@@ -52,14 +54,16 @@ function keyPressed(){
   //For moving and changing animation write code here
 
 
-    if(keyCode === LEFT_ARROW){
-        gato.velocityX = -5; 
-        gato.addAnimation("gatoCorrendo", gatoImg2);
-        gato.changeAnimation("gatoCorrendo");
-        
-        rato.addAnimation("ratoTeasing", ratoImg2);
-        rato.changeAnimation("ratoTeasing");
+  
+  if(keyCode === LEFT_ARROW){
     
+    rato.changeAnimation("ratoAnimado", ratoImg2);
+    rato.frameDelay = 25;
 
-    }
+    gato.changeAnimation("gatoAndando", gatoImg2);
+    gato.frameDelay = 25;
+    
+    gato.x = gato.x-2
+}
+
 }
